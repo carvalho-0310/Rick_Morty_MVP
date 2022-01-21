@@ -15,6 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainPresenterImpl implements MainPresenter {
+    private int page = 1;
 
     private Retrofit rf = new Retrofit.
             Builder().
@@ -22,7 +23,6 @@ public class MainPresenterImpl implements MainPresenter {
             addConverterFactory(GsonConverterFactory.create()).
             build();
     private CharacterSevice sevice = rf.create(CharacterSevice.class);
-    private Random rn = new Random();
 
     private MainView mainView;
 
@@ -32,32 +32,7 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onCreate() {
-        mainView.showLoading();
-        final String TAG = "service";
-
-
-
-        sevice.listCharacter(rn.nextInt(43))
-                .enqueue(
-                new Callback<CharacterResponseVO>() {
-                    @Override
-                    public void onResponse(Call<CharacterResponseVO> call, Response<CharacterResponseVO> response) {
-                        if (!response.isSuccessful()) {
-                            Log.i(TAG, "Erro: " + response.code());
-                            mainView.showModalError();
-                        } else {
-                            CharacterResponseVO characterResponse = response.body();
-                            mainView.showCharacter(characterResponse.getResults());
-                            mainView.hideLoading();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<CharacterResponseVO> call, Throwable t) {
-                        Log.e(TAG, "Erro: " + t.getMessage());
-                        mainView.showModalError();
-                    }
-                });
+        requetCharacterList();
     }
 
     @Override
@@ -68,11 +43,43 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onClickTryAgain() {
-
+        requetCharacterList();
     }
 
     @Override
     public void onClickQuit() {
+        mainView.finish();
+    }
 
+    private void requetCharacterList() {
+
+        mainView.showLoading();
+        final String TAG = "service";
+
+        sevice.listCharacter(page)
+                .enqueue(
+                        new Callback<CharacterResponseVO>() {
+                            @Override
+                            public void onResponse(Call<CharacterResponseVO> call, Response<CharacterResponseVO> response) {
+                                if (!response.isSuccessful()) {
+                                    Log.i(TAG, "Erro: " + response.code());
+                                    mainView.showModalError();
+                                } else {
+                                    CharacterResponseVO characterResponse = response.body();
+                                    mainView.showCharacter(characterResponse.getResults());
+                                    mainView.hideLoading();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<CharacterResponseVO> call, Throwable t) {
+                                Log.e(TAG, "Erro: " + t.getMessage());
+                                mainView.showModalError();
+                            }
+                        });
+        if (page<43) {
+            page++;
+        }
     }
 }
+
+

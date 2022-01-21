@@ -66,11 +66,10 @@ public class ListCharacterAdapter extends RecyclerView.Adapter<ListCharacterAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   clickCharacter.onClickCharacter(character);
+                    clickCharacter.onClickCharacter(character);
 
                 }
             });
-
         }
 
         public void bind(Character character) {
@@ -86,7 +85,7 @@ public class ListCharacterAdapter extends RecyclerView.Adapter<ListCharacterAdap
             } else if (character.getStatus().equals("Alive")) {
                 int color = ContextCompat.getColor(statusView.getContext(), R.color.colorgreem);
                 statusView.setTextColor(color);
-            }else {
+            } else {
                 int color = ContextCompat.getColor(statusView.getContext(), R.color.colorBlck);
                 statusView.setTextColor(color);
             }

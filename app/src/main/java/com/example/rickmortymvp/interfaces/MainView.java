@@ -8,11 +8,12 @@ import com.example.rickmortymvp.ListCharacterAdapter;
 
 
 public interface MainView {
-    public void showLoading();
-    public void hideLoading();
-    public void showCharacter(List<Character> listCharacter);
-    public void startInfo(Character character);
-    public void showModalError();
+     void showLoading();
+     void hideLoading();
+     void showCharacter(List<Character> listCharacter);
+     void startInfo(Character character);
+     void showModalError();
+     void finish();
 
 
 
